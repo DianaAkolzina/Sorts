@@ -1,0 +1,79 @@
+import random
+import time
+import matplotlib.pyplot as plt
+from sorting_algorithms import (
+    bubble_sort,
+    selection_sort,
+    insertion_sort,
+    merge_sort,
+    quick_sort,
+    heap_sort,
+    counting_sort,
+    radix_sort,
+    shell_sort,
+    tim_sort,
+)
+
+def generate_random_numbers(n):
+    return [random.randint(1, 1000) for _ in range(n)]
+
+def visualize_sorting(arr, algorithm, delay=0.01):
+    fig, ax = plt.subplots()
+    ax.set_title(algorithm.__name__)
+    bar_rects = ax.bar(range(len(arr)), arr, align="edge")
+    text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
+
+    def update_fig(arr, rects, iteration):
+        for rect, val in zip(rects, arr):
+            rect.set_height(val)
+        text.set_text(f"Number of operations: {iteration}")
+
+    if algorithm in [bubble_sort, selection_sort, insertion_sort, shell_sort]:
+        for iteration, new_arr in enumerate(algorithm(arr, True)):
+            update_fig(new_arr, bar_rects, iteration)
+            plt.pause(delay)
+
+    elif algorithm in [merge_sort, quick_sort, heap_sort]:
+        for iteration, new_arr in enumerate(algorithm(arr, True, 0, len(arr) - 1)):
+            update_fig(new_arr, bar_rects, iteration)
+            plt.pause(delay)
+
+    elif algorithm == counting_sort:
+        max_val = max(arr)
+        for iteration, new_arr in enumerate(algorithm(arr, max_val, True)):
+            update_fig(new_arr, bar_rects, iteration)
+            plt.pause(delay)
+
+    elif algorithm == radix_sort:
+        for iteration, new_arr in enumerate(algorithm(arr, True)):
+            update_fig(new_arr, bar_rects, iteration)
+            plt.pause(delay)
+
+    elif algorithm == tim_sort:
+        for iteration, new_arr in enumerate(sorted(arr)):
+            update_fig(new_arr, bar_rects, iteration)
+            plt.pause(delay)
+
+    plt.show(block=False)
+    plt.pause(3)
+    plt.close()
+
+if __name__ == "__main__":
+    n = 100
+    random_numbers = generate_random_numbers(n)
+
+    sorting_algorithms = [
+        bubble_sort,
+        selection_sort,
+        insertion_sort,
+        merge_sort,
+        quick_sort,
+        heap_sort,
+        counting_sort,
+        radix_sort,
+        shell_sort,
+        tim_sort,
+    ]
+
+    for sort_algorithm in sorting_algorithms:
+        visualize_sorting(random_numbers.copy(), sort_algorithm)
